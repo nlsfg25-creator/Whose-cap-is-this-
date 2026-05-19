@@ -353,24 +353,56 @@
 
         .pattern-sentence { font-size: 1.6rem; font-weight: 700; margin: 5px 0; }
 
+        /* RESTRUCTURED SENTENCE BUILDER LAYOUT FOR LARGER GRAPHICS */
         .builder-graphic-prompt {
-            display: inline-flex;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            border: 2px solid #cbd5e1;
+            margin: 20px auto;
+            max-width: 550px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .builder-text-wrapper {
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
-            background: white;
-            padding: 15px 30px;
-            border-radius: 50px;
-            border: 2px solid #cbd5e1;
-            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .builder-prompt-img-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 16px;
+            border: 2px dashed #94a3b8;
         }
 
         .builder-prompt-img {
-            width: 80px;
-            height: 80px;
+            width: 160px; /* Enhanced Graphic Blueprint */
+            height: 160px;
             object-fit: cover;
             border-radius: 12px;
             border: 2px solid #cbd5e1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .builder-img-tag {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .builder-answer-reveal-zone {
@@ -630,9 +662,9 @@
     <nav class="nav-menu">
         <button class="nav-btn" onclick="showSection('vocabulary', event)">Vocabulary</button>
         <button class="nav-btn" onclick="showSection('this-that', event)">This / That</button>
-        <button class="nav-btn" onclick="showSection('sentence', event)">Sentence Patterns</button>
+        <button class="nav-btn active" onclick="showSection('sentence', event)">Sentence Patterns</button>
         <button class="nav-btn" onclick="showSection('practice', event)">Practice Exercises</button>
-        <button class="nav-btn active" onclick="showSection('worksheet', event)">Worksheet Dashboard 📝</button>
+        <button class="nav-btn" onclick="showSection('worksheet', event)">Worksheet Dashboard 📝</button>
     </nav>
 
     <section id="vocabulary" class="lesson-section">
@@ -823,7 +855,7 @@
         </div>
     </section>
 
-    <section id="sentence" class="lesson-section">
+    <section id="sentence" class="lesson-section active">
         <h2>Sentence Patterns</h2>
         
         <div class="three-column-pattern-grid">
@@ -849,14 +881,19 @@
             <p>Look at the clues, then click the button to see the answer sentence layout.</p>
             
             <div class="builder-graphic-prompt">
-                <span id="prompt-distance-clue" style="font-size: 1.4rem; font-weight: bold;"></span>
-                <span style="font-size: 1.5rem; font-weight: bold;">Whose</span>
-                <img id="builder-vocab-img-frame" src="" alt="Concept Prompt" class="builder-prompt-img">
-                <span id="prompt-trailing-phrase" style="font-size: 1.5rem; font-weight: bold;">is this?</span>
+                <div class="builder-prompt-img-container">
+                    <img id="builder-vocab-img-frame" src="" alt="Concept Prompt" class="builder-prompt-img">
+                    <span class="builder-img-tag">Target Item</span>
+                </div>
+                <div class="builder-text-wrapper">
+                    <span id="prompt-distance-clue" style="font-size: 1.5rem; font-weight: bold;"></span>
+                    <span style="font-size: 1.6rem; font-weight: bold; color: #1e293b;">Whose [___]</span>
+                    <span id="prompt-trailing-phrase" style="font-size: 1.6rem; font-weight: bold;">is this?</span>
+                </div>
             </div>
 
-            <div style="margin: 10px 0;">
-                <span style="font-size: 1.2rem; font-weight: bold; background: #e0f2fe; color: #0369a1; padding: 6px 16px; border-radius: 20px;">
+            <div style="margin: 15px 0;">
+                <span style="font-size: 1.3rem; font-weight: bold; background: #e0f2fe; color: #0369a1; padding: 8px 20px; border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                     🏷️ Owner Clue: <span id="builder-name-tag">Latrell</span>
                 </span>
             </div>
@@ -934,7 +971,7 @@
         </div>
     </section>
 
-    <section id="worksheet" class="lesson-section active">
+    <section id="worksheet" class="lesson-section">
         <h2>Worksheet Dashboard 📝</h2>
         
         <div id="ws-auth-block" class="ws-gatekeeper-panel">
@@ -1031,10 +1068,9 @@
         { type: "Vocabulary", question: "What's this?", image: "wallet", options: ["water bottle", "wallet", "eraser", "umbrella"], targetAnswer: "wallet" }
     ];
 
-    // --- SECTION 2: EXPANDED LISTEN & CHOOSE QUESTION BANK (Draws 11 * 4 Pts = 44 Pts) ---
-    // Modified to feature challenging spelling traps for vocabulary items
+    // --- SECTION 2: LISTEN & CHOOSE BANK WITH SPELLING TRAPS (Draws 11 * 4 Pts = 44 Pts) ---
     const LARGE_AUDIO_BANK = [
-        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose cap is this?", options: ["Whose cap is this?", ["Whose cab is this?"], "Whose cape is this?", "Whose cp is this?"], targetAnswer: "Whose cap is this?" },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose cap is this?", options: ["Whose cap is this?", "Whose cab is this?", "Whose cape is this?", "Whose cp is this?"], targetAnswer: "Whose cap is this?" },
         { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's Latrell's eraser.", options: ["It's Latrell's eraser.", "It's Latrell's erraser.", "It's Latrell's iraser.", "It's Latrell's raser."], targetAnswer: "It's Latrell's eraser." },
         { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose umbrella is that?", options: ["Whose umbrella is that?", "Whose umbrela is that?", "Whose amberella is that?", "Whose umbrila is that?"], targetAnswer: "Whose umbrella is that?" },
         { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's my water bottle.", options: ["It's my water bottle.", "It's my water botle.", "It's my walter bottle.", "It's my water battle."], targetAnswer: "It's my water bottle." },
@@ -1052,7 +1088,7 @@
         { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's Latrell's cap.", options: ["It's Latrell's cap.", "It's Latrell's cab.", "It's Latrell's cape.", "It's Latrell's cp."], targetAnswer: "It's Latrell's cap." }
     ];
 
-    // --- SECTION 3: 20-QUESTION ARRANGE THE SENTENCE BANK (Draws 8 * 5 Pts = 40 Pts) ---
+    // --- SECTION 3: SENTENCE ARRANGEMENT BANK (Draws 8 * 5 Pts = 40 Pts) ---
     const LARGE_ARRANGE_BANK = [
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "pencil", "is", "this"], choices: [".", "?"], targetAnswer: ["Whose", "pencil", "is", "this"], targetPunc: "?" },
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["That", "is", "Amy's", "umbrella"], choices: [".", "?"], targetAnswer: ["That", "is", "Amy's", "umbrella"], targetPunc: "." },
@@ -1163,7 +1199,6 @@
         }
     }
 
-    // Context-safe string preparation for inline JS handlers
     function escapeString(str) {
         return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
     }
@@ -1420,25 +1455,20 @@
         });
     }
 
-    // --- WORKSHEET SHUFFLING ENGINE WITH VARIABLE RANDOMIZED SELECTION ---
     function initializeStudentQuizSession() {
         STUDENT_IDENTIFICATION.classGroup = document.getElementById("ws-class-picker").value;
         STUDENT_IDENTIFICATION.studentNumber = document.getElementById("ws-student-picker").value;
         document.getElementById("ws-header-student-tag").innerText = `Class ${STUDENT_IDENTIFICATION.classGroup} - Student #${STUDENT_IDENTIFICATION.studentNumber}`;
         
-        // 1. Shuffling and isolating exact item counts per blueprint specifications
         let randomizedVocab = FIXED_VOCAB_POOL.map(q => ({...q, options: shuffleArray(q.options)}));
-        randomizedVocab = shuffleArray(randomizedVocab); // Total 8 items
+        randomizedVocab = shuffleArray(randomizedVocab); 
 
-        // Draws 11 randomized entries out of the multi-choice Listen and Choose bank
         let structuralAudioPool = shuffleArray(LARGE_AUDIO_BANK).slice(0, 11);
         let randomizedAudio = structuralAudioPool.map(q => ({...q, options: shuffleArray(q.options)}));
 
-        // Draws 8 randomized entries out of the 20 total Arrange the Sentence bank options
         let structuralArrangePool = shuffleArray(LARGE_ARRANGE_BANK).slice(0, 8);
         let randomizedArrange = structuralArrangePool.map(q => ({...q, choices: shuffleArray(q.choices)}));
 
-        // Combine standard pools (Total 27 questions: 8 + 11 + 8)
         ACTIVE_EXAM_SET = [...randomizedVocab, ...randomizedAudio, ...randomizedArrange];
         CURRENT_QUESTION_INDEX = 0; 
         
