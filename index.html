@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Whose Cap Is This?</title>
+
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --secondary: #f5a623;
+            --success: #7ed321;
+            --error: #d0021b;
+            --dark: #333;
+            --light: #f9f9f9;
+            --this-color: #0d47a1; 
+            --that-color: #e65100; 
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #eef2f5;
+            margin: 0;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-top: 0;
+        }
+
+        h2 {
+            color: var(--primary);
+            border-left: 5px solid var(--secondary);
+            padding-left: 10px;
+            font-size: 2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-btn.active,
+        .nav-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .lesson-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .lesson-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .vocab-card {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid #ddd;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .vocab-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .image-wrapper {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid #ddd;
+            margin-bottom: 15px;
+            cursor: pointer;
+            background: #2c3e50;
+        }
+
+        .mystery-cover {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4rem;
+            color: #fff;
+            font-weight: bold;
+            background: radial-gradient(circle, #34495e, #2c3e50);
+            transition: opacity 0.4s ease, visibility 0.4s;
+            z-index: 2;
+        }
+
+        .real-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .image-wrapper.revealed .mystery-cover {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .image-wrapper.revealed .real-img {
+            opacity: 1;
+        }
+
+        .action-container {
+            width: 100%;
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reveal-name-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: none; 
+            animation: fadeIn 0.3s ease;
+        }
+
+        .vocab-word {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 5px 0;
+        }
+
+        .audio-btn {
+            background: #eef2f5;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .audio-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .flow-control {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .control-btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 0 10px;
+            border: none;
+        }
+
+        .btn-next { background: var(--primary); color: white; }
+        .btn-back { background: #6c757d; color: white; }
+        .btn-reset { background: #fff; color: var(--dark); border: 2px solid #ccc !important; }
+
+        .comparison-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .comparison-card {
+            background: #fff;
+            border: 3px solid var(--this-color);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .comparison-card.far-card { border-color: var(--that-color); }
+
+        .static-zone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 160px;
+            background: #eef3fc;
+            border-radius: 15px;
+            margin: 15px 0;
+            font-size: 2.2rem;
+            font-weight: bold;
+        }
+
+        .comparison-card.near-card .static-zone { color: var(--this-color); }
+        .comparison-card.far-card .static-zone { background: #fff3e0; color: var(--that-color); }
+
+        .static-line {
+            display: inline-block;
+            border-bottom: 4px dashed #999;
+            margin: 0 10px;
+            vertical-align: middle;
+        }
+
+        .comparison-card.near-card .static-line { border-color: var(--this-color); }
+        .comparison-card.far-card .static-line { border-color: var(--that-color); }
+
+        .interactive-item-img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid #ccc;
+        }
+
+        .giant-phrase-label {
+            font-size: 3.2rem;
+            font-weight: 800;
+            margin-top: 20px;
+            text-transform: capitalize;
+        }
+
+        .phrase-this { color: var(--this-color); }
+        .phrase-that { color: var(--that-color); }
+
+        .centered-game-container {
+            text-align: center;
+            max-width: 650px;
+            margin: 30px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            border: 3px solid var(--primary);
+        }
+
+        .centered-game-container img {
+            display: block;
+            margin: 20px auto;
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 3px solid #ddd;
+        }
+
+        .centered-game-container .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .large-rule-card {
+            background: #fff8e1;
+            border: 3px solid var(--secondary);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+        }
+
+        .three-column-pattern-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .pattern-column-card {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .pattern-column-card.left-this { border-left: 6px solid var(--this-color); }
+        .pattern-column-card.center-response { border: 3px solid var(--secondary); background: #fffbeb; }
+        .pattern-column-card.right-that { border-right: 6px solid var(--that-color); }
+
+        .pattern-sentence { font-size: 1.6rem; font-weight: 700; margin: 5px 0; }
+
+        .builder-graphic-prompt {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: 2px solid #cbd5e1;
+            margin: 15px 0;
+        }
+
+        .builder-prompt-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid #cbd5e1;
+        }
+
+        .builder-answer-reveal-zone {
+            background: #ffffff;
+            border: 2px dashed var(--secondary);
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            max-width: 500px;
+        }
+
+        .matching-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .match-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 230px;
+        }
+
+        .match-item {
+            background: white;
+            border: 2px solid #ccc;
+            height: 100px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.4rem; 
+            color: #2c3e50;
+        }
+
+        .match-item.selected { background: #dbefff; border-color: var(--primary); }
+
+        .drop-zone {
+            background: var(--light);
+            border: 2px dashed #bbb;
+            border-radius: 10px;
+            height: 100px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .drop-zone.correct {
+            border-color: var(--success);
+            background: #e8f5e9;
+            font-weight: bold;
+            color: #2e7d32;
+            font-size: 1.6rem;
+        }
+
+        .match-img { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; }
+
+        .activity-box {
+            background: #f3f9fe;
+            border: 2px solid #b3e5fc;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin: 8px 4px;
+        }
+
+        .btn:hover { background: #e69516; }
+
+        .feedback { margin-top: 15px; font-weight: bold; font-size: 1.4rem; min-height: 20px; }
+
+        .conversation-layout {
+            max-width: 700px;
+            margin: 15px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-bubble { display: flex; gap: 15px; align-items: flex-start; }
+
+        .chat-avatar {
+            width: 55px;
+            height: 55px;
+            background: #cbd5e1;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .chat-bubble.teacher .chat-avatar { background: #dbefff; border: 2px solid var(--primary); }
+        .chat-bubble.student .chat-avatar { background: #fef3c7; border: 2px solid var(--secondary); }
+
+        .chat-content {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+            flex-grow: 1;
+        }
+
+        .chat-speaker-title { font-size: 0.9rem; font-weight: bold; color: #64748b; text-transform: uppercase; }
+        .chat-text-msg { font-size: 1.3rem; font-weight: 600; line-height: 1.4; }
+
+        .picker-style-box {
+            font-size: 1.1rem;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 2px solid var(--primary);
+            background: white;
+            font-weight: bold;
+        }
+
+        .classroom-control-header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .ws-gatekeeper-panel {
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #ffffff;
+            border: 3px dashed var(--primary);
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .worksheet-item {
+            background: #ffffff;
+            border: 3px solid var(--primary);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 20px auto;
+            max-width: 650px;
+            text-align: center; 
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+        }
+
+        .worksheet-item.item-correct { border-color: var(--success); background: #f0fdf4; }
+        .worksheet-item.item-wrong { border-color: var(--error); background: #fef2f2; }
+
+        .ws-question-graphic {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 3px solid #cbd5e1;
+            margin: 15px auto;
+            display: block;
+        }
+
+        .ws-mcq-options-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .ws-radio-card-label {
+            background: white;
+            border: 2px solid #cbd5e1;
+            padding: 14px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .ws-radio-card-label:hover { border-color: var(--primary); background: #f8fafc; }
+        .ws-radio-card-label input[type="radio"] { transform: scale(1.3); margin: 0; }
+
+        .ws-audio-trigger-btn {
+            background: #312e81;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ws-audio-trigger-btn:hover { background: #1e1b4b; }
+        .ws-item-feedback-msg { margin-top: 15px; font-size: 1.3rem; font-weight: 700; }
+        .ws-progress-text { font-size: 1.1rem; font-weight: bold; color: #64748b; margin-bottom: 10px; text-transform: uppercase; }
+
+        .dialogue-practice-frame { border: 2px dashed #cbd5e1; padding: 15px; border-radius: 12px; background: #fff; text-align: center; }
+        .dialogue-hidden-pattern { font-size: 1.7rem; font-weight: 700; color: var(--primary); display: none; margin: 10px 0; }
+
+        @media(max-width:950px) {
+            .vocab-grid { grid-template-columns: repeat(2, 1fr); }
+            .comparison-wrapper { grid-template-columns: 1fr; }
+            .three-column-pattern-grid { grid-template-columns: 1fr; }
+        }
+        @media(max-width:600px) {
+            .vocab-grid { grid-template-columns: 1fr; }
+            .matching-container { flex-direction: column; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Whose Cap Is This?</h1>
+
+    <nav class="nav-menu">
+        <button class="nav-btn" onclick="showSection('vocabulary', event)">Vocabulary</button>
+        <button class="nav-btn" onclick="showSection('this-that', event)">This / That</button>
+        <button class="nav-btn" onclick="showSection('sentence', event)">Sentence Patterns</button>
+        <button class="nav-btn" onclick="showSection('practice', event)">Practice Exercises</button>
+        <button class="nav-btn active" onclick="showSection('worksheet', event)">Worksheet Dashboard 📝</button>
+    </nav>
+
+    <section id="vocabulary" class="lesson-section">
+        <div id="vocab-study-block">
+            <h2>Vocabulary Study</h2>
+            <p>🔍 Tap a dark mystery card to reveal the hidden object! Click the reveal button to check its name.</p>
+            
+            <div class="vocab-grid">
+                <div class="vocab-card">
+                    <div class="image-wrapper" onclick="revealMysteryImage(this, 'btn-cap')">
+                        <div class="mystery-cover">🔮</div>
+                        <img id="cap-img" src="" alt="Cap" class="real-img">
+                    </div>
+                    <div class="action-container">
+                        <button id="btn-cap" class="reveal-name-btn" onclick="revealWordText('word-cap')">🔓 Reveal Name</button>
+                        <div id="word-cap" class="vocab-word">cap</div>
+                    </div>
+                    <button class="audio-btn" onclick="playVocab('cap')">📣 Pronounce</button>
+                </div>
+                
+                <div class="vocab-card">
+                    <div class="image-wrapper" onclick="revealMysteryImage(this, 'btn-pencil')">
+                        <div class="mystery-cover">🔮</div>
+                        <img id="pencil-img" src="" alt="Pencil" class="real-img">
+                    </div>
+                    <div class="action-container">
+                        <button id="btn-pencil" class="reveal-name-btn" onclick="revealWordText('word-pencil')">🔓 Reveal Name</button>
+                        <div id="word-pencil" class="vocab-word">pencil</div>
+                    </div>
+                    <button class="audio-btn" onclick="playVocab('pencil')">📣 Pronounce</button>
+                </div>
+                
+                <div class="vocab-card">
+                    <div class="image-wrapper" onclick="revealMysteryImage(this, 'btn-eraser')">
+                        <div class="mystery-cover">🔮</div>
+                        <img id="eraser-img" src="" alt="Eraser" class="real-img">
+                    </div>
+                    <div class="action-container">
+                        <button id="btn-eraser" class="reveal-name-btn" onclick="revealWordText('word-eraser')">🔓 Reveal Name</button>
+                        <div id="word-eraser" class="vocab-word">eraser</div>
+                    </div>
+                    <button class="audio-btn" onclick="playVocab('eraser')">📣 Pronounce</button>
+                </div>
+                
+                <div class="vocab-card">
+                    <div class="image-wrapper" onclick="revealMysteryImage(this, 'btn-water')">
+                        <div class="mystery-cover">🔮</div>
+                        <img id="water-img" src="" alt="Water Bottle" class="real-img">
+                    </div>
+                    <div class="action-container">
+                        <button id="btn-water" class="reveal-name-btn" onclick="revealWordText('word-water')">🔓 Reveal Name</button>
+                        <div id="word-water" class="vocab-word">water bottle</div>
+                    </div>
+                    <button class="audio-btn" onclick="playVocab('water bottle')">📣 Pronounce</button>
+                </div>
+                
+                <div class="vocab-card">
+                    <div class="image-wrapper" onclick="revealMysteryImage(this, 'btn-umbrella')">
+                        <div class="mystery-cover">🔮</div>
+                        <img id="umbrella-img" src="" alt="Umbrella" class="real-img">
+                    </div>
+                    <div class="action-container">
+                        <button id="btn-umbrella" class="reveal-name-btn" onclick="revealWordText('word-umbrella')">🔓 Reveal Name</button>
+                        <div id="word-umbrella" class="vocab-word">umbrella</div>
+                    </div>
+                    <button class="audio-btn" onclick="playVocab('umbrella')">📣 Pronounce</button>
+                </div>
+                
+                <div class="vocab-card">
+                    <div class="image-wrapper" onclick="revealMysteryImage(this, 'btn-book')">
+                        <div class="mystery-cover">🔮</div>
+                        <img id="book-img" src="" alt="Book" class="real-img">
+                    </div>
+                    <div class="action-container">
+                        <button id="btn-book" class="reveal-name-btn" onclick="revealWordText('word-book')">🔓 Reveal Name</button>
+                        <div id="word-book" class="vocab-word">book</div>
+                    </div>
+                    <button class="audio-btn" onclick="playVocab('book')">📣 Pronounce</button>
+                </div>
+
+                <div class="vocab-card">
+                    <div class="image-wrapper" onclick="revealMysteryImage(this, 'btn-backpack')">
+                        <div class="mystery-cover">🔮</div>
+                        <img id="backpack-img" src="" alt="Backpack" class="real-img">
+                    </div>
+                    <div class="action-container">
+                        <button id="btn-backpack" class="reveal-name-btn" onclick="revealWordText('word-backpack')">🔓 Reveal Name</button>
+                        <div id="word-backpack" class="vocab-word">backpack</div>
+                    </div>
+                    <button class="audio-btn" onclick="playVocab('backpack')">📣 Pronounce</button>
+                </div>
+
+                <div class="vocab-card">
+                    <div class="image-wrapper" onclick="revealMysteryImage(this, 'btn-wallet')">
+                        <div class="mystery-cover">🔮</div>
+                        <img id="wallet-img" src="" alt="Wallet" class="real-img">
+                    </div>
+                    <div class="action-container">
+                        <button id="btn-wallet" class="reveal-name-btn" onclick="revealWordText('word-wallet')">🔓 Reveal Name</button>
+                        <div id="word-wallet" class="vocab-word">wallet</div>
+                    </div>
+                    <button class="audio-btn" onclick="playVocab('wallet')">📣 Pronounce</button>
+                </div>
+            </div>
+
+            <div class="flow-control">
+                <button class="control-btn btn-next" onclick="navigateToGame()">Play Game 🎯</button>
+            </div>
+        </div>
+
+        <div id="word-match-section" style="display: none;">
+            <h2>Activity: Match Words to Pictures</h2>
+            <p>Click a text block on the left, then click its matching picture block on the right.</p>
+            
+            <div class="matching-container">
+                <div class="match-column" id="word-source-column"></div>
+                <div class="match-column" id="word-target-column"></div>
+            </div>
+            <div id="match-feedback" class="feedback"></div>
+
+            <div class="flow-control">
+                <button class="control-btn btn-back" onclick="navigateToStudy()">Back to Cards</button>
+                <button class="control-btn btn-reset" onclick="resetWordGame()">Shuffle Game</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="this-that" class="lesson-section">
+        <h2>Understanding This and That</h2>
+        
+        <div class="large-rule-card">
+            <h3>💡 The Grammar Rule:</h3>
+            <ul>
+                <li>📍 Use <strong style="color:var(--this-color)">THIS</strong> when an object is close to you (<strong>Near</strong>).</li>
+                <li>🔭 Use <strong style="color:var(--that-color)">THAT</strong> when an object is far away from you (<strong>Far</strong>).</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin: 25px 0;">
+            <button class="btn" style="background: var(--this-color);" onclick="switchThisThatView('examples')">Show Examples</button>
+            <button class="btn" style="background: var(--that-color);" onclick="switchThisThatView('game')">Play Quick Distance Game</button>
+        </div>
+
+        <div id="this-that-examples-panel">
+            <div style="margin:20px 0; text-align:center;">
+                <label style="font-size:1.3rem; font-weight:bold;">Swap Item: </label>
+                <select id="example-object-picker" onchange="loadStaticComparison()" style="font-size:1.1rem; padding:8px; border-radius:5px; border:2px solid var(--primary)">
+                    <option value="cap">Cap 👒</option>
+                    <option value="pencil">Pencil 🖌️</option>
+                    <option value="eraser">Eraser 🧼</option>
+                    <option value="waterBottle">Water Bottle 🥛</option>
+                    <option value="umbrella">Umbrella 🌂</option>
+                    <option value="book">Book 📚</option>
+                    <option value="backpack">Backpack 🎒</option>
+                    <option value="wallet">Wallet 👛</option>
+                </select>
+            </div>
+
+            <div class="comparison-wrapper">
+                <div class="comparison-card near-card">
+                    <h3 style="color:var(--this-color); font-size:2rem; margin:0 0 10px 0;">THIS ... (Near)</h3>
+                    <div class="static-zone">
+                        <span>☝️ Me</span>
+                        <span class="static-line" style="width: 25px;"></span>
+                        <img id="comp-img-near" src="" alt="Near Item" class="interactive-item-img">
+                    </div>
+                    <div class="giant-phrase-label phrase-this" id="comp-label-near">This cap</div>
+                </div>
+
+                <div class="comparison-card far-card">
+                    <h3 style="color:var(--that-color); font-size:2rem; margin:0 0 10px 0;">... THAT (Far)</h3>
+                    <div class="static-zone">
+                        <span>🔭 Me</span>
+                        <span class="static-line" style="width: 170px;"></span>
+                        <img id="comp-img-far" src="" alt="Far Item" class="interactive-item-img">
+                    </div>
+                    <div class="giant-phrase-label phrase-that" id="comp-label-far">That cap</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="this-that-game-panel" style="display:none;">
+            <div class="centered-game-container">
+                <h3>🎮 Distance Context Challenge</h3>
+                <div id="mini-game-question-container"></div>
+                <div id="mini-game-feedback" class="feedback"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="sentence" class="lesson-section">
+        <h2>Sentence Patterns</h2>
+        
+        <div class="three-column-pattern-grid">
+            <div class="pattern-column-card left-this">
+                <div style="color:var(--this-color); font-weight: bold;">📍 Near Question</div>
+                <div class="pattern-sentence">Whose pencil is <span style="color:var(--this-color)">this</span>?</div>
+            </div>
+            
+            <div class="pattern-column-card center-response">
+                <div style="color:#b45309; font-weight: bold;">✨ Shared Response</div>
+                <div class="pattern-sentence" style="font-size: 1.9rem; color: var(--dark);">It's ...</div>
+                <div style="font-size:0.95rem; color:#64748b; margin-top:8px;">e.g., "It's my pencil." / "It's Latrell's cap."</div>
+            </div>
+            
+            <div class="pattern-column-card right-that">
+                <div style="color:var(--that-color); font-weight: bold;">🔭 Far Question</div>
+                <div class="pattern-sentence">Whose umbrella is <span style="color:var(--that-color)">that</span>?</div>
+            </div>
+        </div>
+
+        <div class="activity-box" style="margin-top: 35px; text-align: center;">
+            <h3>🧩 Sentence Pattern Builder</h3>
+            <p>Look at the clues, then click the button to see the answer sentence layout.</p>
+            
+            <div class="builder-graphic-prompt">
+                <span id="prompt-distance-clue" style="font-size: 1.4rem; font-weight: bold;"></span>
+                <span style="font-size: 1.5rem; font-weight: bold;">Whose</span>
+                <img id="builder-vocab-img-frame" src="" alt="Concept Prompt" class="builder-prompt-img">
+                <span id="prompt-trailing-phrase" style="font-size: 1.5rem; font-weight: bold;">is this?</span>
+            </div>
+
+            <div style="margin: 10px 0;">
+                <span style="font-size: 1.2rem; font-weight: bold; background: #e0f2fe; color: #0369a1; padding: 6px 16px; border-radius: 20px;">
+                    🏷️ Owner Clue: <span id="builder-name-tag">Latrell</span>
+                </span>
+            </div>
+
+            <div class="builder-answer-reveal-zone">
+                <div id="reveal-answer-text" style="font-size: 1.8rem; font-weight: 700; display: none;"></div>
+                <button id="reveal-action-btn" class="btn" onclick="revealSentenceBuilderAnswer()">👁️ Show Answer Pattern</button>
+            </div>
+            
+            <button class="btn" style="background:#6c757d;" onclick="shuffleSentenceBuilderPrompt()">Next Random Challenge 🎲</button>
+        </div>
+    </section>
+
+    <section id="practice" class="lesson-section">
+        <h2>Practice Classroom Dialogue</h2>
+
+        <div class="classroom-control-header">
+            <div>
+                <label style="font-weight:bold; margin-right:8px;">🏫 Select Class:</label>
+                <select id="class-selector" class="picker-style-box" onchange="handleClassChange()">
+                    <option value="501">Class 501</option>
+                    <option value="502">Class 502</option>
+                    <option value="503">Class 503</option>
+                    <option value="504">Class 504</option>
+                    <option value="505">Class 505</option>
+                    <option value="506">Class 506</option>
+                    <option value="507">Class 507</option>
+                    <option value="508">Class 508</option>
+                    <option value="509">Class 509</option>
+                </select>
+            </div>
+
+            <div>
+                <label style="font-weight: bold; margin-right: 8px; color: var(--primary);">🙋‍♂️ Student Number:</label>
+                <select id="student-number-picker" class="picker-style-box" onchange="shuffleConversationExercise()"></select>
+            </div>
+
+            <div>
+                <button class="btn" style="margin:0; padding:8px 16px; font-size:1rem;" onclick="pickRandomStudentNumber()">🎲 Random Student</button>
+            </div>
+        </div>
+
+        <div class="activity-box">
+            <h3 style="text-align: center;">💬 Speaking Practice Simulator</h3>
+            <p style="text-align: center; color:#555;">Say your response sentence out loud to your teacher or peer, then check your structure.</p>
+
+            <div class="conversation-layout">
+                <div class="chat-bubble teacher">
+                    <div class="chat-avatar">🧑‍🏫</div>
+                    <div class="chat-content">
+                        <div class="chat-speaker-title" id="chat-teacher-title">Teacher Question</div>
+                        <div id="chat-question-text" class="chat-text-msg">Whose water bottle is this?</div>
+                        <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+                            <span id="chat-distance-badge" style="font-size:0.85rem; font-weight:bold; background:#e2e8f0; padding:4px 10px; border-radius:10px;">📍 Near</span>
+                            <span id="chat-owner-badge" style="font-size:0.85rem; font-weight:bold; background:#dbefff; color:#0369a1; padding:4px 10px; border-radius:10px;">👤 Owner: Me</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-bubble student">
+                    <div class="chat-avatar">🧒</div>
+                    <div class="chat-content">
+                        <div class="chat-speaker-title">Student Sentence Output Pattern</div>
+                        <div class="dialogue-practice-frame">
+                            <div id="dialogue-target-pattern" class="dialogue-hidden-pattern">It's my water bottle.</div>
+                            <button id="dialogue-reveal-btn" class="btn" onclick="revealDialoguePatternAnswer()">👁️ Verify Answer Pattern</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 15px;">
+                <button class="btn" style="background:#6c757d;" onclick="shuffleConversationExercise()">Next Speaking Frame 🎲</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="worksheet" class="lesson-section active">
+        <h2>Worksheet Dashboard 📝</h2>
+        
+        <div id="ws-auth-block" class="ws-gatekeeper-panel">
+            <span style="font-size: 3.5rem;">📲</span>
+            <h3>Student Login</h3>
+            <p style="color:#555;">Choose your class parameters to begin.</p>
+            <hr style="border: 1px dashed #e2e8f0; margin: 15px 0;">
+            
+            <div style="margin-bottom: 15px; text-align: left;">
+                <label style="font-weight: bold; display: block; margin-bottom: 5px;">Class Selection:</label>
+                <select id="ws-class-picker" class="picker-style-box" style="width: 100%;" onchange="syncWorksheetStudentNumbers()">
+                    <option value="501">Class 501</option>
+                    <option value="502">Class 502</option>
+                    <option value="503">Class 503</option>
+                    <option value="504">Class 504</option>
+                    <option value="505">Class 505</option>
+                    <option value="506">Class 506</option>
+                    <option value="507">Class 507</option>
+                    <option value="508">Class 508</option>
+                    <option value="509">Class 509</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom: 25px; text-align: left;">
+                <label style="font-weight: bold; display: block; margin-bottom: 5px;">Student Number:</label>
+                <select id="ws-student-picker" class="picker-style-box" style="width: 100%;"></select>
+            </div>
+
+            <button class="btn" style="background: var(--success); width: 100%; padding: 14px; font-size: 1.2rem;" onclick="initializeStudentQuizSession()">Start Worksheet</button>
+        </div>
+
+        <div id="ws-exam-block" style="display: none;">
+            <div class="classroom-control-header" style="justify-content: space-between; border-color: var(--secondary); margin-bottom: 15px;">
+                <div>
+                    <span style="font-weight: bold;">Student Logged: </span>
+                    <span id="ws-header-student-tag" style="background: #e0f2fe; color: #0369a1; font-weight: 800; padding: 4px 12px; border-radius: 8px;">---</span>
+                </div>
+                <div>
+                    <span style="font-weight: bold; color: var(--error);">Worksheet Mode: </span>
+                    <span style="background: #fef2f2; color: var(--error); font-weight: 800; padding: 4px 12px; border-radius: 8px;">Single Attempt</span>
+                </div>
+            </div>
+
+            <div id="ws-questions-container"></div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button id="ws-next-btn" class="btn btn-next" onclick="advanceWorksheetFlow()">Next Question ➡️</button>
+            </div>
+
+            <div id="ws-completion-panel" style="display: none; text-align: center; background: white; padding: 30px; border-radius: 20px; max-width: 650px; margin: 20px auto; border: 3px solid var(--success);">
+                <span style="font-size: 3.5rem;">🏁</span>
+                <h3 style="font-size: 1.8rem; margin: 10px 0 5px 0;">Worksheet Complete!</h3>
+                <div id="ws-summary-feedback" style="margin-top: 15px; font-size: 1.6rem; font-weight: bold;"></div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    // Asset Definition Objects
+    const myImages = {
+        cap: "cap.png",
+        pencil: "pencil.png",
+        eraser: "eraser.png",
+        waterBottle: "waterbottle.png",
+        umbrella: "umbrella.png",
+        book: "book.png",
+        backpack: "backpack.png",
+        wallet: "wallet.png"
+    };
+
+    const poolEasyNames = ["Latrell", "Leo", "Joyce", "Max", "Amy", "Sam", "Zoe", "Tom", "Eva", "Ben", "Joy"];
+
+    let builderCurrentTarget = { item: '', distance: '', cleanWord: '', ownerType: '', ownerValue: '' };
+    let currentMiniGameItem = null;
+    let selectedWordElement = null;
+
+    // Worksheet Tracker Configurations
+    let ACTIVE_EXAM_SET = []; 
+    let CURRENT_QUESTION_INDEX = 0; 
+    let STUDENT_IDENTIFICATION = { classGroup: "", studentNumber: "" };
+    let STUDENT_ANSWERS = []; 
+
+    // --- SECTION 1: VOCABULARY POOL (8 Questions * 2 Pts = 16 Pts) ---
+    const FIXED_VOCAB_POOL = [
+        { type: "Vocabulary", question: "What's this?", image: "umbrella", options: ["umbrella", "eraser", "backpack", "pencil"], targetAnswer: "umbrella" },
+        { type: "Vocabulary", question: "What's this?", image: "waterBottle", options: ["book", "cap", "water bottle", "wallet"], targetAnswer: "water bottle" },
+        { type: "Vocabulary", question: "What's this?", image: "eraser", options: ["pencil", "eraser", "cap", "backpack"], targetAnswer: "eraser" },
+        { type: "Vocabulary", question: "What's this?", image: "pencil", options: ["wallet", "umbrella", "water bottle", "pencil"], targetAnswer: "pencil" },
+        { type: "Vocabulary", question: "What's this?", image: "cap", options: ["cap", "book", "eraser", "umbrella"], targetAnswer: "cap" },
+        { type: "Vocabulary", question: "What's this?", image: "book", options: ["water bottle", "book", "backpack", "pencil"], targetAnswer: "book" },
+        { type: "Vocabulary", question: "What's this?", image: "backpack", options: ["wallet", "book", "backpack", "cap"], targetAnswer: "backpack" },
+        { type: "Vocabulary", question: "What's this?", image: "wallet", options: ["water bottle", "wallet", "eraser", "umbrella"], targetAnswer: "wallet" }
+    ];
+
+    // --- SECTION 2: EXPANDED LISTEN & CHOOSE QUESTION BANK (Draws 11 * 4 Pts = 44 Pts) ---
+    // Modified to feature challenging spelling traps for vocabulary items
+    const LARGE_AUDIO_BANK = [
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose cap is this?", options: ["Whose cap is this?", ["Whose cab is this?"], "Whose cape is this?", "Whose cp is this?"], targetAnswer: "Whose cap is this?" },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's Latrell's eraser.", options: ["It's Latrell's eraser.", "It's Latrell's erraser.", "It's Latrell's iraser.", "It's Latrell's raser."], targetAnswer: "It's Latrell's eraser." },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose umbrella is that?", options: ["Whose umbrella is that?", "Whose umbrela is that?", "Whose amberella is that?", "Whose umbrila is that?"], targetAnswer: "Whose umbrella is that?" },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's my water bottle.", options: ["It's my water bottle.", "It's my water botle.", "It's my walter bottle.", "It's my water battle."], targetAnswer: "It's my water bottle." },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose book is this?", options: ["Whose book is this?", "Whose buke is this?", "Whose bock is this?", "Whose bok is this?"], targetAnswer: "Whose book is this?" },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's Leo's pencil.", options: ["It's Leo's pencil.", "It's Leo's pensil.", "It's Leo's pencel.", "It's Leo's pincil."], targetAnswer: "It's Leo's pencil." },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose backpack is this?", options: ["Whose backpack is this?", "Whose backpak is this?", "Whose bagpack is this?", "Whose packback is this?"], targetAnswer: "Whose backpack is this?" },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's Joy's wallet.", options: ["It's Joy's wallet.", "It's Joy's walet.", "It's Joy's wollet.", "It's Joy's vallet."], targetAnswer: "It's Joy's wallet." },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose wallet is that?", options: ["Whose wallet is that?", "Whose walet is that?", "Whose wollet is that?", "Whose vallet is that?"], targetAnswer: "Whose wallet is that?" },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's Latrell's backpack.", options: ["It's Latrell's backpack.", "It's Latrell's backpak.", "It's Latrell's bagpack.", "It's Latrell's packback."], targetAnswer: "It's Latrell's backpack." },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose pencil is that?", options: ["Whose pencil is that?", "Whose pensil is that?", "Whose pencel is that?", "Whose pincil is that?"], targetAnswer: "Whose pencil is that?" },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's Joyce's water bottle.", options: ["It's Joyce's water bottle.", "It's Joyce's water botle.", "It's Joyce's walter bottle.", "It's Joyce's water battle."], targetAnswer: "It's Joyce's water bottle." },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose water bottle is that?", options: ["Whose water bottle is that?", "Whose water botle is that?", "Whose walter bottle is that?", "Whose water battle is that?"], targetAnswer: "Whose water bottle is that?" },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's my umbrella.", options: ["It's my umbrella.", "It's my umbrela.", "It's my amberella.", "It's my umbrila."], targetAnswer: "It's my umbrella." },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose eraser is this?", options: ["Whose eraser is this?", "Whose erraser is this?", "Whose iraser is this?", "Whose raser is this?"], targetAnswer: "Whose eraser is this?" },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's Latrell's cap.", options: ["It's Latrell's cap.", "It's Latrell's cab.", "It's Latrell's cape.", "It's Latrell's cp."], targetAnswer: "It's Latrell's cap." }
+    ];
+
+    // --- SECTION 3: 20-QUESTION ARRANGE THE SENTENCE BANK (Draws 8 * 5 Pts = 40 Pts) ---
+    const LARGE_ARRANGE_BANK = [
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "pencil", "is", "this"], choices: [".", "?"], targetAnswer: ["Whose", "pencil", "is", "this"], targetPunc: "?" },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["That", "is", "Amy's", "umbrella"], choices: [".", "?"], targetAnswer: ["That", "is", "Amy's", "umbrella"], targetPunc: "." },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It's", "my", "backpack"], choices: [".", "?"], targetAnswer: ["It's", "my", "backpack"], targetPunc: "." },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "wallet", "is", "that"], choices: [".", "?"], targetAnswer: ["Whose", "wallet", "is", "that"], targetPunc: "?" },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It", "is", "Zoe's", "eraser"], choices: [".", "?"], targetAnswer: ["It", "is", "Zoe's", "eraser"], targetPunc: "." },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "water", "bottle", "is", "this"], choices: [".", "?"], targetAnswer: ["Whose", "water", "bottle", "is", "this"], targetPunc: "?" },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["This", "is", "Sam's", "book"], choices: [".", "?"], targetAnswer: ["This", "is", "Sam's", "book"], targetPunc: "." },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It's", "Joyce's", "wallet"], choices: [".", "?"], targetAnswer: ["It's", "Joyce's", "wallet"], targetPunc: "." },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "cap", "is", "this"], choices: [".", "?"], targetAnswer: ["Whose", "cap", "is", "this"], targetPunc: "?" },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It's", "Latrell's", "backpack"], choices: [".", "?"], targetAnswer: ["It's", "Latrell's", "backpack"], targetPunc: "." },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "umbrella", "is", "that"], choices: [".", "?"], targetAnswer: ["Whose", "umbrella", "is", "that"], targetPunc: "?" },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["This", "is", "my", "water", "bottle"], choices: [".", "?"], targetAnswer: ["This", "is", "my", "water", "bottle"], targetPunc: "." },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It", "is", "Max's", "pencil"], choices: [".", "?"], targetAnswer: ["It", "is", "Max's", "pencil"], targetPunc: "." },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "book", "is", "that"], choices: [".", "?"], targetAnswer: ["Whose", "book", "is", "that"], targetPunc: "?" },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["That", "is", "Latrell's", "cap"], choices: [".", "?"], targetAnswer: ["That", "is", "Latrell's", "cap"], targetPunc: "." },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It's", "Ben's", "water", "bottle"], choices: [".", "?"], targetAnswer: ["It's", "Ben's", "water", "bottle"], targetPunc: "." },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "eraser", "is", "this"], choices: [".", "?"], targetAnswer: ["Whose", "eraser", "is", "this"], targetPunc: "?" },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["This", "is", "Eva's", "wallet"], choices: [".", "?"], targetAnswer: ["This", "is", "Eva's", "wallet"], targetPunc: "." },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "backpack", "is", "that"], choices: [".", "?"], targetAnswer: ["Whose", "backpack", "is", "that"], targetPunc: "?" },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It's", "my", "umbrella"], choices: [".", "?"], targetAnswer: ["It's", "my", "umbrella"], targetPunc: "." }
+    ];
+
+    window.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("cap-img").src = myImages.cap;
+        document.getElementById("pencil-img").src = myImages.pencil;
+        document.getElementById("eraser-img").src = myImages.eraser;
+        document.getElementById("water-img").src = myImages.waterBottle;
+        document.getElementById("umbrella-img").src = myImages.umbrella;
+        document.getElementById("book-img").src = myImages.book;
+        document.getElementById("backpack-img").src = myImages.backpack;
+        document.getElementById("wallet-img").src = myImages.wallet;
+        
+        generateNumbersForClass();
+        syncWorksheetStudentNumbers();
+        resetWordGame();
+        loadStaticComparison();
+        shuffleSentenceBuilderPrompt();
+        shuffleConversationExercise();
+    });
+
+    function getClassNumbers(classId) {
+        let numbers = [];
+        if (["501", "504", "505", "507"].includes(classId)) {
+            for (let i = 1; i <= 24; i++) numbers.push(i);
+        } else if (classId === "502") {
+            for (let i = 1; i <= 25; i++) { if (i !== 2) numbers.push(i); }
+        } else if (classId === "503") {
+            for (let i = 1; i <= 26; i++) { if (i !== 23) numbers.push(i); }
+        } else if (classId === "506" || classId === "508") {
+            for (let i = 1; i <= 25; i++) numbers.push(i);
+        } else if (classId === "509") {
+            for (let i = 1; i <= 29; i++) { if (i !== 2 && i !== 21) numbers.push(i); }
+        }
+        return numbers;
+    }
+
+    function generateNumbersForClass() {
+        const classSelector = document.getElementById("class-selector");
+        const studentPicker = document.getElementById("student-number-picker");
+        if (!classSelector || !studentPicker) return;
+
+        const availableNumbers = getClassNumbers(classSelector.value);
+        studentPicker.innerHTML = "";
+        availableNumbers.forEach(num => {
+            studentPicker.innerHTML += `<option value="${num}">Student No. ${num}</option>`;
+        });
+    }
+
+    function syncWorksheetStudentNumbers() {
+        const classGroup = document.getElementById("ws-class-picker").value;
+        const studentDropdown = document.getElementById("ws-student-picker");
+        const targetNumbers = getClassNumbers(classGroup);
+        studentDropdown.innerHTML = "";
+        targetNumbers.forEach(num => {
+            studentDropdown.innerHTML += `<option value="${num}">Student #${num}</option>`;
+        });
+    }
+
+    function pickRandomStudentNumber() {
+        const classSelector = document.getElementById("class-selector");
+        const studentPicker = document.getElementById("student-number-picker");
+        const availableNumbers = getClassNumbers(classSelector.value);
+        studentPicker.value = availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
+        shuffleConversationExercise();
+    }
+
+    function handleClassChange() {
+        generateNumbersForClass();
+        shuffleConversationExercise();
+    }
+
+    function shuffleArray(array) {
+        let arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function playVocab(word){
+        if('speechSynthesis' in window){
+            speechSynthesis.cancel();
+            let utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'en-US';
+            speechSynthesis.speak(utterance);
+        }
+    }
+
+    // Context-safe string preparation for inline JS handlers
+    function escapeString(str) {
+        return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    function playCorrectChime() {
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const ctx = new AudioContext();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+            osc.frequency.setValueAtTime(880.00, ctx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.start(); osc.stop(ctx.currentTime + 0.4);
+        } catch(e) {}
+    }
+
+    function showSection(sectionId, event){
+        document.querySelectorAll('.lesson-section').forEach(sec => sec.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+        if(event) event.currentTarget.classList.add('active');
+    }
+
+    function navigateToGame() {
+        document.getElementById("vocab-study-block").style.display = "none";
+        document.getElementById("word-match-section").style.display = "block";
+    }
+
+    function navigateToStudy() {
+        document.getElementById("word-match-section").style.display = "none";
+        document.getElementById("vocab-study-block").style.display = "block";
+    }
+
+    function revealMysteryImage(wrapper, btnId) {
+        if (!wrapper.classList.contains('revealed')) {
+            wrapper.classList.add('revealed');
+            document.getElementById(btnId).style.display = "block";
+        }
+    }
+
+    function revealWordText(wordId) {
+        document.getElementById(wordId).style.display = "block";
+    }
+
+    function switchThisThatView(panelMode) {
+        if(panelMode === 'examples') {
+            document.getElementById("this-that-examples-panel").style.display = "block";
+            document.getElementById("this-that-game-panel").style.display = "none";
+        } else {
+            document.getElementById("this-that-examples-panel").style.display = "none";
+            document.getElementById("this-that-game-panel").style.display = "block";
+            generateMiniGame(); 
+        }
+    }
+
+    const miniGamePool = [
+        { itemKey: 'cap', distance: 'near', text: "The cap is sitting right on top of your head.", answer: 'this cap' },
+        { itemKey: 'cap', distance: 'far', text: "The cap is blown away by the wind across the street.", answer: 'that cap' },
+        { itemKey: 'pencil', distance: 'near', text: "The pencil is resting right behind your ear.", answer: 'this pencil' },
+        { itemKey: 'pencil', distance: 'far', text: "The pencil rolled far across the room under the bookshelf.", answer: 'that pencil' },
+        { itemKey: 'backpack', distance: 'near', text: "The backpack is strapped tight onto your shoulders.", answer: 'this backpack' },
+        { itemKey: 'backpack', distance: 'far', text: "The backpack was left all the way back inside the school bus.", answer: 'that backpack' },
+        { itemKey: 'wallet', distance: 'near', text: "The wallet is tucked safely inside your front pocket.", answer: 'this wallet' },
+        { itemKey: 'wallet', distance: 'far', text: "The wallet fell out onto the park bench over there.", answer: 'that wallet' }
+    ];
+
+    function loadStaticComparison() {
+        const key = document.getElementById("example-object-picker").value;
+        let displayWord = key === 'waterBottle' ? 'water bottle' : key;
+        document.getElementById("comp-img-near").src = myImages[key];
+        document.getElementById("comp-img-far").src = myImages[key];
+        document.getElementById("comp-label-near").innerText = "This " + displayWord;
+        document.getElementById("comp-label-far").innerText = "That " + displayWord;
+    }
+
+    function generateMiniGame() {
+        const targetElement = document.getElementById("mini-game-question-container");
+        document.getElementById("mini-game-feedback").innerText = "";
+        currentMiniGameItem = miniGamePool[Math.floor(Math.random() * miniGamePool.length)];
+        
+        let colorThemeClass = currentMiniGameItem.distance === 'near' ? 'phrase-this' : 'phrase-that';
+        let contextText = currentMiniGameItem.distance === 'near' ? '📍 NEAR (Close to you)' : '🔭 FAR (Away from you)';
+
+        targetElement.innerHTML = `
+            <p class="${colorThemeClass}" style="font-size:1.6rem; font-weight:bold;">${contextText}</p>
+            <p style="font-size:1.25rem; color:#555;">${currentMiniGameItem.text}</p>
+            <img src="${myImages[currentMiniGameItem.itemKey]}" alt="Scenario">
+            <div class="btn-group" id="mini-game-options"></div>
+        `;
+
+        let baseWord = currentMiniGameItem.itemKey === 'waterBottle' ? 'water bottle' : currentMiniGameItem.itemKey;
+        document.getElementById("mini-game-options").innerHTML = `
+            <button class="btn" style="background:#fff; color:var(--this-color); border:3px solid var(--this-color);" onclick="checkMiniGameAnswer('this ${baseWord}')">this ${baseWord}</button>
+            <button class="btn" style="background:#fff; color:var(--that-color); border:3px solid var(--that-color);" onclick="checkMiniGameAnswer('that ${baseWord}')">that ${baseWord}</button>
+        `;
+    }
+
+    function checkMiniGameAnswer(selectedOption) {
+        const feedback = document.getElementById("mini-game-feedback");
+        if(selectedOption === currentMiniGameItem.answer) {
+            playCorrectChime();
+            feedback.style.color = "var(--success)";
+            feedback.innerHTML = `🎉 Correct! <strong>${selectedOption}</strong> is right!`;
+            setTimeout(generateMiniGame, 1500);
+        } else {
+            feedback.style.color = "var(--error)";
+            feedback.innerText = `Try again! Near = This, Far = That.`;
+        }
+    }
+
+    function shuffleSentenceBuilderPrompt() {
+        document.getElementById('reveal-answer-text').style.display = "none";
+        document.getElementById('reveal-action-btn').style.display = "inline-block";
+        
+        const keys = Object.keys(myImages);
+        const randomKey = keys[Math.floor(Math.random() * keys.length)];
+        const randomDistance = ['near', 'far'][Math.floor(Math.random() * 2)];
+        const chosenOwnerType = ['my', 'name'][Math.floor(Math.random() * 2)];
+        let wordLabel = randomKey === 'waterBottle' ? 'water bottle' : randomKey;
+        
+        builderCurrentTarget.item = randomKey;
+        builderCurrentTarget.distance = randomDistance;
+        builderCurrentTarget.cleanWord = wordLabel;
+        builderCurrentTarget.ownerType = chosenOwnerType;
+        
+        document.getElementById('builder-vocab-img-frame').src = myImages[randomKey];
+        
+        if (chosenOwnerType === 'my') {
+            document.getElementById('builder-name-tag').innerText = "Me (my)";
+            builderCurrentTarget.ownerValue = 'my';
+        } else {
+            let randomNameStr = poolEasyNames[Math.floor(Math.random() * poolEasyNames.length)];
+            document.getElementById('builder-name-tag').innerText = randomNameStr;
+            builderCurrentTarget.ownerValue = randomNameStr;
+        }
+        
+        if(randomDistance === 'near') {
+            document.getElementById('prompt-distance-clue').innerHTML = `<span style="color:var(--this-color)">📍 [NEAR]</span>`;
+            document.getElementById('prompt-trailing-phrase').innerHTML = `is <span style="color:var(--this-color)">this</span>?`;
+        } else {
+            document.getElementById('prompt-distance-clue').innerHTML = `<span style="color:var(--that-color)">🔭 [FAR]</span>`;
+            document.getElementById('prompt-trailing-phrase').innerHTML = `is <span style="color:var(--that-color)">that</span>?`;
+        }
+    }
+
+    function revealSentenceBuilderAnswer() {
+        playCorrectChime();
+        let ownerSegment = builderCurrentTarget.ownerType === 'my' ? `my` : `${builderCurrentTarget.ownerValue}'s`;
+        document.getElementById('reveal-answer-text').innerHTML = `It's ${ownerSegment} ${builderCurrentTarget.cleanWord}.`;
+        document.getElementById('reveal-action-btn').style.display = "none";
+        document.getElementById('reveal-answer-text').style.display = "block";
+    }
+
+    function shuffleConversationExercise() {
+        document.getElementById("dialogue-target-pattern").style.display = "none";
+        document.getElementById("dialogue-reveal-btn").style.display = "inline-block";
+
+        const pickerElement = document.getElementById("student-number-picker");
+        const activeStudentNo = pickerElement ? pickerElement.value : 1;
+        document.getElementById("chat-teacher-title").innerText = `Teacher Question (To Student #${activeStudentNo})`;
+
+        const keys = Object.keys(myImages);
+        const randomKey = keys[Math.floor(Math.random() * keys.length)];
+        let displayItemName = randomKey === 'waterBottle' ? 'water bottle' : randomKey;
+
+        const randomDistance = ['near', 'far'][Math.floor(Math.random() * 2)];
+        const chosenOwnerType = ['my', 'name'][Math.floor(Math.random() * 2)];
+
+        let distanceString = randomDistance === 'near' ? 'this' : 'that';
+        document.getElementById("chat-question-text").innerHTML = `Whose ${displayItemName} is <span style="color:${randomDistance === 'near' ? 'var(--this-color)' : 'var(--that-color)'}; font-weight:bold;">${distanceString}</span>?`;
+        document.getElementById("chat-distance-badge").innerText = randomDistance === 'near' ? '📍 Near Context' : '🔭 Far Context';
+
+        let scenarioActiveName = poolEasyNames[Math.floor(Math.random() * poolEasyNames.length)];
+        let formattedSentence = "";
+        
+        if (chosenOwnerType === 'my') {
+            document.getElementById("chat-owner-badge").innerText = "👤 Owner Clue: Me (my)";
+            formattedSentence = `It's my ${displayItemName}.`;
+        } else {
+            document.getElementById("chat-owner-badge").innerText = `🏷️ Owner Clue: ${scenarioActiveName}`;
+            formattedSentence = `It's ${scenarioActiveName}'s ${displayItemName}.`;
+        }
+        document.getElementById("dialogue-target-pattern").innerText = `✨ "${formattedSentence}"`;
+    }
+
+    function revealDialoguePatternAnswer() {
+        playCorrectChime();
+        document.getElementById("dialogue-reveal-btn").style.display = "none";
+        document.getElementById("dialogue-target-pattern").style.display = "block";
+    }
+
+    function selectWord(element){
+        if(selectedWordElement) selectedWordElement.classList.remove('selected');
+        selectedWordElement = element;
+        element.classList.add('selected');
+    }
+
+    function handleDrop(zoneElement){
+        const feedback = document.getElementById('match-feedback');
+        if(!selectedWordElement) {
+            feedback.style.color = 'var(--error)';
+            feedback.innerText = "Select a word card from the left column first!";
+            return;
+        }
+
+        if(selectedWordElement.getAttribute('data-word') === zoneElement.getAttribute('data-match')){
+            playCorrectChime();
+            zoneElement.classList.add('correct');
+            zoneElement.innerHTML = "🎉 Correct!"; 
+            selectedWordElement.style.visibility = 'hidden';
+            feedback.style.color = 'var(--success)';
+            feedback.innerText = "Match pair completed!";
+        } else {
+            feedback.style.color = 'var(--error)';
+            feedback.innerText = "Try matching a different combination.";
+        }
+        if(selectedWordElement) selectedWordElement.classList.remove('selected');
+        selectedWordElement = null;
+    }
+
+    function resetWordGame() {
+        document.getElementById('match-feedback').innerText = "";
+        selectedWordElement = null;
+
+        const sourceData = [
+            { word: 'cap', label: 'cap' }, { word: 'pencil', label: 'pencil' }, { word: 'eraser', label: 'eraser' },
+            { word: 'water bottle', label: 'water bottle' }, { word: 'umbrella', label: 'umbrella' }, { word: 'book', label: 'book' },
+            { word: 'backpack', label: 'backpack' }, { word: 'wallet', label: 'wallet' }
+        ];
+        const targetData = [
+            { match: 'cap', img: myImages.cap }, { match: 'pencil', img: myImages.pencil }, { match: 'eraser', img: myImages.eraser },
+            { match: 'water bottle', img: myImages.waterBottle }, { match: 'umbrella', img: myImages.umbrella }, { match: 'book', img: myImages.book },
+            { match: 'backpack', img: myImages.backpack }, { match: 'wallet', img: myImages.wallet }
+        ];
+
+        const shuffledSources = shuffleArray(sourceData);
+        const shuffledTargets = shuffleArray(targetData);
+
+        document.getElementById("word-source-column").innerHTML = "";
+        shuffledSources.forEach(item => {
+            document.getElementById("word-source-column").innerHTML += `<div class="match-item" data-word="${item.word}" onclick="selectWord(this)">${item.label}</div>`;
+        });
+
+        document.getElementById("word-target-column").innerHTML = "";
+        shuffledTargets.forEach(item => {
+            document.getElementById("word-target-column").innerHTML += `
+                <div class="drop-zone" data-match="${item.match}" onclick="handleDrop(this)">
+                    <img src="${item.img}" alt="Match Frame" class="match-img">
+                </div>`;
+        });
+    }
+
+    // --- WORKSHEET SHUFFLING ENGINE WITH VARIABLE RANDOMIZED SELECTION ---
+    function initializeStudentQuizSession() {
+        STUDENT_IDENTIFICATION.classGroup = document.getElementById("ws-class-picker").value;
+        STUDENT_IDENTIFICATION.studentNumber = document.getElementById("ws-student-picker").value;
+        document.getElementById("ws-header-student-tag").innerText = `Class ${STUDENT_IDENTIFICATION.classGroup} - Student #${STUDENT_IDENTIFICATION.studentNumber}`;
+        
+        // 1. Shuffling and isolating exact item counts per blueprint specifications
+        let randomizedVocab = FIXED_VOCAB_POOL.map(q => ({...q, options: shuffleArray(q.options)}));
+        randomizedVocab = shuffleArray(randomizedVocab); // Total 8 items
+
+        // Draws 11 randomized entries out of the multi-choice Listen and Choose bank
+        let structuralAudioPool = shuffleArray(LARGE_AUDIO_BANK).slice(0, 11);
+        let randomizedAudio = structuralAudioPool.map(q => ({...q, options: shuffleArray(q.options)}));
+
+        // Draws 8 randomized entries out of the 20 total Arrange the Sentence bank options
+        let structuralArrangePool = shuffleArray(LARGE_ARRANGE_BANK).slice(0, 8);
+        let randomizedArrange = structuralArrangePool.map(q => ({...q, choices: shuffleArray(q.choices)}));
+
+        // Combine standard pools (Total 27 questions: 8 + 11 + 8)
+        ACTIVE_EXAM_SET = [...randomizedVocab, ...randomizedAudio, ...randomizedArrange];
+        CURRENT_QUESTION_INDEX = 0; 
+        
+        STUDENT_ANSWERS = new Array(ACTIVE_EXAM_SET.length).fill(null).map((_, i) => {
+            if (ACTIVE_EXAM_SET[i].type === "Arrange") {
+                return { words: [], punctuation: null };
+            }
+            return null;
+        });
+
+        document.getElementById("ws-auth-block").style.display = "none";
+        document.getElementById("ws-exam-block").style.display = "block";
+        document.getElementById("ws-completion-panel").style.display = "none";
+        document.getElementById("ws-next-btn").style.display = "inline-block";
+
+        renderActiveWorksheetQuestion();
+    }
+
+    function renderActiveWorksheetQuestion() {
+        const targetContainer = document.getElementById("ws-questions-container");
+        targetContainer.innerHTML = "";
+
+        if (CURRENT_QUESTION_INDEX >= ACTIVE_EXAM_SET.length) {
+            calculateAndShowFinalWorksheetScore();
+            return;
+        }
+
+        let q = ACTIVE_EXAM_SET[CURRENT_QUESTION_INDEX];
+        let idx = CURRENT_QUESTION_INDEX;
+        
+        document.getElementById("ws-next-btn").innerText = (idx === ACTIVE_EXAM_SET.length - 1) ? "Submit Worksheet 🏁" : "Next Question ➡️";
+
+        let layoutHTML = `
+            <div class="worksheet-item" style="border-color: var(--primary); background: white;">
+                <div class="ws-progress-text">Question ${idx + 1} of ${ACTIVE_EXAM_SET.length}</div>
+                <p style="font-size:1.4rem; margin:10px 0; font-weight:700; color: var(--this-color);">[${q.type}] ${q.question}</p>
+        `;
+
+        if (q.type === "Vocabulary") {
+            layoutHTML += `
+                <img src="${myImages[q.image]}" class="ws-question-graphic" alt="Prompt Graphic">
+                <div class="ws-mcq-options-container">
+            `;
+            q.options.forEach(opt => {
+                let checked = STUDENT_ANSWERS[idx] === opt ? "checked" : "";
+                layoutHTML += `
+                    <label class="ws-radio-card-label">
+                        <input type="radio" name="ws-quiz-opt" value="${escapeString(opt)}" ${checked} onclick="saveMCQSelection('${escapeString(opt)}')">
+                        ${opt}
+                    </label>
+                `;
+            });
+            layoutHTML += `</div>`;
+        } 
+        else if (q.type === "Listen and Choose") {
+            layoutHTML += `
+                <button class="ws-audio-trigger-btn" onclick="playVocab('${escapeString(q.audioText)}')">🔊 Listen to Audio</button>
+                <div class="ws-mcq-options-container" style="margin-top: 15px;">
+            `;
+            q.options.forEach(opt => {
+                let checked = STUDENT_ANSWERS[idx] === opt ? "checked" : "";
+                layoutHTML += `
+                    <label class="ws-radio-card-label">
+                        <input type="radio" name="ws-quiz-opt" value="${escapeString(opt)}" ${checked} onclick="saveMCQSelection('${escapeString(opt)}')">
+                        ${opt}
+                    </label>
+                `;
+            });
+            layoutHTML += `</div>`;
+        } 
+        else if (q.type === "Arrange") {
+            layoutHTML += `
+                <p style="font-size: 0.95rem; color: #64748b; margin-bottom: 15px;">Click words into the box below to arrange them:</p>
+                <div id="drag-source-container" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; min-height:50px;"></div>
+                <div id="drag-drop-zone" style="border: 2px dashed var(--primary); background:#f8fafc; border-radius:12px; width:100%; max-width:500px; min-height:70px; display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; padding:10px; box-sizing:border-box;"></div>
+                
+                <p style="font-size: 0.95rem; color: #64748b; margin-top: 25px; margin-bottom: 10px;">Select the correct punctuation mark:</p>
+                <div style="display:flex; gap:20px; justify-content:center; margin-bottom:10px;">
+            `;
+            q.choices.forEach(punc => {
+                let isSelected = STUDENT_ANSWERS[idx] && STUDENT_ANSWERS[idx].punctuation === punc ? "background:var(--success); color:white; border-color:var(--success);" : "background:white; color:var(--dark); border:2px solid #cbd5e1;";
+                layoutHTML += `
+                    <button class="btn" style="${isSelected} font-size:1.5rem; width:60px; height:60px; padding:0; border-radius:50%;" id="punc-btn-${punc}" onclick="savePunctuationSelection('${punc}')">${punc}</button>
+                `;
+            });
+            layoutHTML += `</div>`;
+        }
+
+        layoutHTML += `</div>`;
+        targetContainer.innerHTML = layoutHTML;
+
+        if (q.type === "Arrange") {
+            setupDragAndDropSorting(q, idx);
+        }
+    }
+
+    function saveMCQSelection(value) {
+        STUDENT_ANSWERS[CURRENT_QUESTION_INDEX] = value;
+    }
+
+    function savePunctuationSelection(punc) {
+        STUDENT_ANSWERS[CURRENT_QUESTION_INDEX].punctuation = punc;
+        let q = ACTIVE_EXAM_SET[CURRENT_QUESTION_INDEX];
+        q.choices.forEach(p => {
+            let el = document.getElementById(`punc-btn-${p}`);
+            if(el) {
+                if(p === punc) {
+                    el.style.background = "var(--success)";
+                    el.style.color = "white";
+                    el.style.borderColor = "var(--success)";
+                } else {
+                    el.style.background = "white";
+                    el.style.color = "var(--dark)";
+                    el.style.borderColor = "#cbd5e1";
+                }
+            }
+        });
+    }
+
+    function setupDragAndDropSorting(q, idx) {
+        const sourceContainer = document.getElementById("drag-source-container");
+        const dropZone = document.getElementById("drag-drop-zone");
+        
+        let workingWords = STUDENT_ANSWERS[idx] && STUDENT_ANSWERS[idx].words.length > 0 ? [] : shuffleArray(q.words);
+        if (!STUDENT_ANSWERS[idx]) {
+            STUDENT_ANSWERS[idx] = { words: [], punctuation: null }; 
+        }
+
+        function rebuildDragInterface() {
+            sourceContainer.innerHTML = "";
+            dropZone.innerHTML = "";
+
+            workingWords.forEach(word => {
+                let btn = document.createElement("button");
+                btn.className = "btn";
+                btn.style.margin = "4px";
+                btn.style.background = "var(--primary)";
+                btn.innerText = word;
+                btn.onclick = () => {
+                    workingWords = workingWords.filter(w => w !== word);
+                    STUDENT_ANSWERS[idx].words.push(word);
+                    rebuildDragInterface();
+                };
+                sourceContainer.appendChild(btn);
+            });
+
+            STUDENT_ANSWERS[idx].words.forEach(word => {
+                let btn = document.createElement("button");
+                btn.className = "btn";
+                btn.style.margin = "4px";
+                btn.style.background = "var(--secondary)";
+                btn.innerText = word;
+                btn.onclick = () => {
+                    STUDENT_ANSWERS[idx].words = STUDENT_ANSWERS[idx].words.filter(w => w !== word);
+                    workingWords.push(word);
+                    rebuildDragInterface();
+                };
+                dropZone.appendChild(btn);
+            });
+        }
+        rebuildDragInterface();
+    }
+
+    function advanceWorksheetFlow() {
+        let currentAns = STUDENT_ANSWERS[CURRENT_QUESTION_INDEX];
+        let qType = ACTIVE_EXAM_SET[CURRENT_QUESTION_INDEX].type;
+
+        if (qType === "Arrange") {
+            if (!currentAns || currentAns.words.length === 0 || !currentAns.punctuation) {
+                alert("Please arrange the words and select a punctuation mark before moving on!");
+                return;
+            }
+        } else {
+            if (!currentAns) {
+                alert("Please select an option before moving on!");
+                return;
+            }
+        }
+        
+        CURRENT_QUESTION_INDEX++;
+        renderActiveWorksheetQuestion();
+    }
+
+    function calculateAndShowFinalWorksheetScore() {
+        document.getElementById("ws-questions-container").innerHTML = "";
+        document.getElementById("ws-next-btn").style.display = "none";
+        document.getElementById("ws-completion-panel").style.display = "block";
+
+        let totalCalculatedPoints = 0;
+
+        ACTIVE_EXAM_SET.forEach((q, i) => {
+            let studentSelection = STUDENT_ANSWERS[i];
+            
+            if (q.type === "Vocabulary") {
+                if (studentSelection === q.targetAnswer) {
+                    totalCalculatedPoints += 2.0; 
+                }
+            } 
+            else if (q.type === "Listen and Choose") {
+                if (studentSelection === q.targetAnswer) {
+                    totalCalculatedPoints += 4.0; 
+                }
+            } 
+            else if (q.type === "Arrange") {
+                let config = studentSelection || { words: [], punctuation: null };
+                
+                let isSentenceCorrect = true;
+                if (config.words.length !== q.targetAnswer.length) {
+                    isSentenceCorrect = false;
+                } else {
+                    for (let pos = 0; pos < q.targetAnswer.length; pos++) {
+                        if (config.words[pos] !== q.targetAnswer[pos]) {
+                            isSentenceCorrect = false;
+                            break;
+                        }
+                    }
+                }
+                
+                if (isSentenceCorrect && config.punctuation === q.targetPunc) {
+                    totalCalculatedPoints += 5.0; 
+                }
+            }
+        });
+
+        totalCalculatedPoints = Math.round(totalCalculatedPoints);
+
+        document.getElementById("ws-summary-feedback").innerHTML = `
+            <div style="font-size: 1.4rem; color: #1e3a8a; font-weight: bold; line-height: 1.6; padding: 20px; background: #eff6ff; border-radius: 12px; border: 2px solid #bfdbfe;">
+                📊 Worksheet Calculated Grade: <span style="font-size: 2.2rem; color: var(--success);">${totalCalculatedPoints} / 100</span><br>
+            </div>
+            <p style="font-size: 1.1rem; color: #64748b; margin-top: 15px;">Your test profile is complete. Show this screen to your instructor.</p>
+            <button class="btn" style="background: var(--primary); margin-top: 10px;" onclick="resetWholeWorksheetForNextStudent()">Next Student Restart 🔄</button>
+        `;
+    }
+
+    function resetWholeWorksheetForNextStudent() {
+        document.getElementById("ws-exam-block").style.display = "none";
+        document.getElementById("ws-auth-block").style.display = "block";
+        syncWorksheetStudentNumbers();
+    }
+</script>
+
+</body>
+</html>
