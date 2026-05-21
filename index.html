@@ -856,7 +856,7 @@
     </section>
 
     <section id="sentence" class="lesson-section active">
-        <h2>Sentence Patterns</h2>
+        <h3>Sentence Patterns</h3>
         
         <div class="three-column-pattern-grid">
             <div class="pattern-column-card left-this">
@@ -867,22 +867,26 @@
             <div class="pattern-column-card center-response">
                 <div style="color:#b45309; font-weight: bold;">✨ Shared Response</div>
                 <div class="pattern-sentence" style="font-size: 1.9rem; color: var(--dark);">It's ...</div>
-                <div style="font-size:0.95rem; color:#64748b; margin-top:8px;">e.g., "It's my pencil." / "It's Latrell's cap."</div>
+                <div style="font-size:0.95rem; color:#64748b; margin-top:8px;">e.g., "It's my pencil." / "It's Latrell's pencil."/"This is Latrell's pencil."</div>
             </div>
             
             <div class="pattern-column-card right-that">
                 <div style="color:var(--that-color); font-weight: bold;">🔭 Far Question</div>
-                <div class="pattern-sentence">Whose umbrella is <span style="color:var(--that-color)">that</span>?</div>
+                <div class="pattern-sentence">Whose pencil is <span style="color:var(--that-color)">that</span>?</div>
             </div>
         </div>
 
         <div class="activity-box" style="margin-top: 35px; text-align: center;">
-            <h3>🧩 Sentence Pattern Builder</h3>
-            <p>Look at the clues, then click the button to see the answer sentence layout.</p>
+            <h2>🧩 Sentence Pattern Builder</h2>
+            <p>Look at the clues.</p>
             
             <div class="builder-graphic-prompt">
                 <div class="builder-prompt-img-container">
-                    <img id="builder-vocab-img-frame" src="" alt="Concept Prompt" class="builder-prompt-img">
+                    <img id="builder-vocab-img-frame"
+                     src=""
+                     alt="Concept Prompt"
+                     class="builder-prompt-img"
+                     style="width: 220px; height: auto;">
                     <span class="builder-img-tag">Target Item</span>
                 </div>
                 <div class="builder-text-wrapper">
@@ -937,7 +941,7 @@
         </div>
 
         <div class="activity-box">
-            <h3 style="text-align: center;">💬 Speaking Practice Simulator</h3>
+            <h2 style="text-align: center;">💬 Speaking Practice </h2>
             <p style="text-align: center; color:#555;">Say your response sentence out loud to your teacher or peer, then check your structure.</p>
 
             <div class="conversation-layout">
@@ -956,7 +960,7 @@
                 <div class="chat-bubble student">
                     <div class="chat-avatar">🧒</div>
                     <div class="chat-content">
-                        <div class="chat-speaker-title">Student Sentence Output Pattern</div>
+                        <div class="chat-speaker-title">Sentence Pattern</div>
                         <div class="dialogue-practice-frame">
                             <div id="dialogue-target-pattern" class="dialogue-hidden-pattern">It's my water bottle.</div>
                             <button id="dialogue-reveal-btn" class="btn" onclick="revealDialoguePatternAnswer()">👁️ Verify Answer Pattern</button>
@@ -1044,7 +1048,7 @@
         wallet: "wallet.png"
     };
 
-    const poolEasyNames = ["Latrell", "Leo", "Joyce", "Max", "Amy", "Sam", "Zoe", "Tom", "Eva", "Ben", "Joy"];
+    const poolEasyNames = ["Latrell", "Leo", "Eric", "Max", "Amy", "Sam", "Nemo", "Tom", "Emily", "Ben", "Joy"];
 
     let builderCurrentTarget = { item: '', distance: '', cleanWord: '', ownerType: '', ownerValue: '' };
     let currentMiniGameItem = null;
@@ -1081,7 +1085,7 @@
         { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose wallet is that?", options: ["Whose wallet is that?", "Whose walet is that?", "Whose wollet is that?", "Whose vallet is that?"], targetAnswer: "Whose wallet is that?" },
         { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's Latrell's backpack.", options: ["It's Latrell's backpack.", "It's Latrell's backpak.", "It's Latrell's bagpack.", "It's Latrell's packback."], targetAnswer: "It's Latrell's backpack." },
         { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose pencil is that?", options: ["Whose pencil is that?", "Whose pensil is that?", "Whose pencel is that?", "Whose pincil is that?"], targetAnswer: "Whose pencil is that?" },
-        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's Joyce's water bottle.", options: ["It's Joyce's water bottle.", "It's Joyce's water botle.", "It's Joyce's walter bottle.", "It's Joyce's water battle."], targetAnswer: "It's Joyce's water bottle." },
+        { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's Eric's water bottle.", options: ["It's Eric's water bottle.", "It's Eric's water botle.", "It's Eric's walter bottle.", "It's Eric's water battle."], targetAnswer: "It's Eric's water bottle." },
         { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose water bottle is that?", options: ["Whose water bottle is that?", "Whose water botle is that?", "Whose walter bottle is that?", "Whose water battle is that?"], targetAnswer: "Whose water bottle is that?" },
         { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "It's my umbrella.", options: ["It's my umbrella.", "It's my umbrela.", "It's my amberella.", "It's my umbrila."], targetAnswer: "It's my umbrella." },
         { type: "Listen and Choose", question: "Audio - Listen and Choose", audioText: "Whose eraser is this?", options: ["Whose eraser is this?", "Whose erraser is this?", "Whose iraser is this?", "Whose raser is this?"], targetAnswer: "Whose eraser is this?" },
@@ -1094,10 +1098,10 @@
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["That", "is", "Amy's", "umbrella"], choices: [".", "?"], targetAnswer: ["That", "is", "Amy's", "umbrella"], targetPunc: "." },
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It's", "my", "backpack"], choices: [".", "?"], targetAnswer: ["It's", "my", "backpack"], targetPunc: "." },
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "wallet", "is", "that"], choices: [".", "?"], targetAnswer: ["Whose", "wallet", "is", "that"], targetPunc: "?" },
-        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It", "is", "Zoe's", "eraser"], choices: [".", "?"], targetAnswer: ["It", "is", "Zoe's", "eraser"], targetPunc: "." },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It", "is", "Nemo's", "eraser"], choices: [".", "?"], targetAnswer: ["It", "is", "Nemo's", "eraser"], targetPunc: "." },
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "water", "bottle", "is", "this"], choices: [".", "?"], targetAnswer: ["Whose", "water", "bottle", "is", "this"], targetPunc: "?" },
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["This", "is", "Sam's", "book"], choices: [".", "?"], targetAnswer: ["This", "is", "Sam's", "book"], targetPunc: "." },
-        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It's", "Joyce's", "wallet"], choices: [".", "?"], targetAnswer: ["It's", "Joyce's", "wallet"], targetPunc: "." },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It's", "Eric's", "wallet"], choices: [".", "?"], targetAnswer: ["It's", "Eric's", "wallet"], targetPunc: "." },
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "cap", "is", "this"], choices: [".", "?"], targetAnswer: ["Whose", "cap", "is", "this"], targetPunc: "?" },
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It's", "Latrell's", "backpack"], choices: [".", "?"], targetAnswer: ["It's", "Latrell's", "backpack"], targetPunc: "." },
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "umbrella", "is", "that"], choices: [".", "?"], targetAnswer: ["Whose", "umbrella", "is", "that"], targetPunc: "?" },
@@ -1107,7 +1111,7 @@
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["That", "is", "Latrell's", "cap"], choices: [".", "?"], targetAnswer: ["That", "is", "Latrell's", "cap"], targetPunc: "." },
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It's", "Ben's", "water", "bottle"], choices: [".", "?"], targetAnswer: ["It's", "Ben's", "water", "bottle"], targetPunc: "." },
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "eraser", "is", "this"], choices: [".", "?"], targetAnswer: ["Whose", "eraser", "is", "this"], targetPunc: "?" },
-        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["This", "is", "Eva's", "wallet"], choices: [".", "?"], targetAnswer: ["This", "is", "Eva's", "wallet"], targetPunc: "." },
+        { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["This", "is", "Emily's", "wallet"], choices: [".", "?"], targetAnswer: ["This", "is", "Emily's", "wallet"], targetPunc: "." },
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["Whose", "backpack", "is", "that"], choices: [".", "?"], targetAnswer: ["Whose", "backpack", "is", "that"], targetPunc: "?" },
         { type: "Arrange", question: "Arrange the words and pick the correct punctuation sign.", words: ["It's", "my", "umbrella"], choices: [".", "?"], targetAnswer: ["It's", "my", "umbrella"], targetPunc: "." }
     ];
@@ -1259,14 +1263,14 @@
     }
 
     const miniGamePool = [
-        { itemKey: 'cap', distance: 'near', text: "The cap is sitting right on top of your head.", answer: 'this cap' },
-        { itemKey: 'cap', distance: 'far', text: "The cap is blown away by the wind across the street.", answer: 'that cap' },
-        { itemKey: 'pencil', distance: 'near', text: "The pencil is resting right behind your ear.", answer: 'this pencil' },
-        { itemKey: 'pencil', distance: 'far', text: "The pencil rolled far across the room under the bookshelf.", answer: 'that pencil' },
-        { itemKey: 'backpack', distance: 'near', text: "The backpack is strapped tight onto your shoulders.", answer: 'this backpack' },
-        { itemKey: 'backpack', distance: 'far', text: "The backpack was left all the way back inside the school bus.", answer: 'that backpack' },
-        { itemKey: 'wallet', distance: 'near', text: "The wallet is tucked safely inside your front pocket.", answer: 'this wallet' },
-        { itemKey: 'wallet', distance: 'far', text: "The wallet fell out onto the park bench over there.", answer: 'that wallet' }
+        { itemKey: 'cap', distance: 'near', text: "The cap is on your head.", answer: 'this cap' },
+        { itemKey: 'cap', distance: 'far', text: "The cap is across the street.", answer: 'that cap' },
+        { itemKey: 'pencil', distance: 'near', text: "The pencil is behind your ear.", answer: 'this pencil' },
+        { itemKey: 'pencil', distance: 'far', text: "The pencil is under the bookshelf.", answer: 'that pencil' },
+        { itemKey: 'backpack', distance: 'near', text: "The backpack is on your back.", answer: 'this backpack' },
+        { itemKey: 'backpack', distance: 'far', text: "The backpack is on the school bus.", answer: 'that backpack' },
+        { itemKey: 'wallet', distance: 'near', text: "The wallet is in your pocket.", answer: 'this wallet' },
+        { itemKey: 'wallet', distance: 'far', text: "The wallet is on the park bench.", answer: 'that wallet' }
     ];
 
     function loadStaticComparison() {
